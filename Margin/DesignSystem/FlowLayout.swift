@@ -1,10 +1,13 @@
 import SwiftUI
 
-/// A simple wrapping layout: items flow left-to-right and wrap to the next line,
-/// with each row centered. Used for the word palette and body chips so the set
-/// reads as a flat, balanced field rather than a ranked list (§6.3).
+/// A simple wrapping layout: items flow left-to-right and wrap to the next line.
+/// Each row is anchored by `alignment` (centered by default). Used for the word
+/// palette and body chips so the set reads as a flat, balanced field rather than
+/// a ranked list (§6.3).
 struct FlowLayout: Layout {
     var spacing: CGFloat = Theme.Spacing.xs
+    /// How each row is anchored across the available width.
+    var alignment: HorizontalAlignment = .center
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout Void) -> CGSize {
         let maxWidth = proposal.width ?? .infinity
@@ -50,7 +53,15 @@ struct FlowLayout: Layout {
             let rowWidth = row.reduce(0) { $0 + $1.size.width }
                 + spacing * CGFloat(max(0, row.count - 1))
             let rowHeight = row.map(\.size.height).max() ?? 0
-            var cursorX = bounds.minX + (maxWidth - rowWidth) / 2
+
+            var cursorX: CGFloat
+            if alignment == .leading {
+                cursorX = bounds.minX
+            } else if alignment == .trailing {
+                cursorX = bounds.minX + (maxWidth - rowWidth)
+            } else {
+                cursorX = bounds.minX + (maxWidth - rowWidth) / 2
+            }
 
             for item in row {
                 subviews[item.index].place(

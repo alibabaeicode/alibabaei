@@ -63,7 +63,8 @@ struct NameView: View {
         Text("What's here right now?")
             .font(Theme.Font.serif(27, relativeTo: .title))
             .foregroundStyle(Theme.Color.ink.opacity(0.85))
-            .multilineTextAlignment(.center)
+            .multilineTextAlignment(.leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.bottom, Theme.Spacing.xs)
     }
 
@@ -72,7 +73,7 @@ struct NameView: View {
     /// The flat, non-hierarchical set of words. Order is interleaved by config
     /// so no good→bad gradient is implied; all chips are visually equal.
     private var palette: some View {
-        FlowLayout(spacing: Theme.Spacing.sm) {
+        FlowLayout(spacing: Theme.Spacing.sm, alignment: .leading) {
             ForEach(MomentConfig.words) { choice in
                 ChoiceChip(
                     label: choice.word,
@@ -131,8 +132,8 @@ struct NameView: View {
     // MARK: - Body (optional, second)
 
     private var bodySection: some View {
-        VStack(spacing: Theme.Spacing.md) {
-            VStack(spacing: Theme.Spacing.xxs) {
+        VStack(alignment: .leading, spacing: Theme.Spacing.md) {
+            VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
                 Text("Where does it sit?")
                     .font(Theme.Font.serif(20, relativeTo: .title3))
                     .foregroundStyle(Theme.Color.ink.opacity(0.7))
@@ -141,10 +142,11 @@ struct NameView: View {
                     .tracking(0.5)
                     .foregroundStyle(Theme.Color.ink.opacity(0.4))
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
 
             // TODO: a "what does the body signal" helper — not built yet (§6.3).
 
-            FlowLayout(spacing: Theme.Spacing.sm) {
+            FlowLayout(spacing: Theme.Spacing.sm, alignment: .leading) {
                 ForEach(MomentConfig.bodyLocations, id: \.self) { location in
                     ChoiceChip(
                         label: location,
