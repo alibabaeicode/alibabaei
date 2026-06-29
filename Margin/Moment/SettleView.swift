@@ -20,7 +20,7 @@ struct SettleView: View {
 
     var body: some View {
         ZStack {
-            background
+            PaperBackground()
 
             InkMark(tone: Theme.Color.ink)
                 .frame(width: 240, height: 240)
@@ -41,17 +41,6 @@ struct SettleView: View {
     }
 
     // MARK: - Pieces
-
-    /// A soft paper field with a little depth (§7: depth, soft layering).
-    private var background: some View {
-        RadialGradient(
-            gradient: Gradient(colors: [Theme.Color.paper, Theme.Color.paperDeep]),
-            center: .center,
-            startRadius: 80,
-            endRadius: 520
-        )
-        .ignoresSafeArea()
-    }
 
     /// The one calm line. It steps back once the breath is done.
     private var guidance: some View {
