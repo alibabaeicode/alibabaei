@@ -45,4 +45,10 @@ enum MomentConfig {
     /// The value stored when a person taps "not sure" (distinct from skipping,
     /// which leaves `bodyLocation` nil). Matches the data model's note in §3.
     static let bodyNotSure = "not sure"
+
+    // MARK: - Note
+
+    /// How tall the optional note field is, in lines: it opens at the lower
+    /// bound and grows to the upper bound before scrolling. Tunable.
+    static let noteLineLimit = 4...12
 }
