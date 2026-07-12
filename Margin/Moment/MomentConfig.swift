@@ -51,4 +51,9 @@ enum MomentConfig {
     /// How tall the optional note field is, in lines: it opens at the lower
     /// bound and grows to the upper bound before scrolling. Tunable.
     static let noteLineLimit = 4...12
+
+    // MARK: - Home
+
+    /// How many recent Moments the quiet thread on Home shows. Tunable.
+    static let homeRecentCount = 5
 }

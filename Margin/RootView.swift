@@ -1,22 +1,23 @@
 import SwiftUI
 import SwiftData
 
-/// The app's root surface — for now, the Moment loop as far as it's built.
-///
-/// Settle → Name → Note. A completed Moment is saved on device, then the flow
-/// returns to a fresh breath (the staged Home/Return isn't built yet).
+/// The app's root surface. Home is the base; a Moment (Settle → Name → Note)
+/// begins from Home, saves on device, and returns to Home.
 struct RootView: View {
-    private enum Stage { case settle, name, note }
+    private enum Stage { case home, settle, name, note }
 
     @Environment(\.modelContext) private var modelContext
 
-    @State private var stage: Stage = .settle
+    @State private var stage: Stage = .home
     /// The Moment being built, carried across the stages.
     @State private var draft: MomentDraft?
 
     var body: some View {
         ZStack {
             switch stage {
+            case .home:
+                HomeView(onBegin: { go(.settle) })
+                    .transition(.opacity)
             case .settle:
                 SettleView(onContinue: { go(.name) })
                     .transition(.opacity)
@@ -31,14 +32,14 @@ struct RootView: View {
                     NoteView(draft: draft, onComplete: { completed in
                         save(completed)
                         self.draft = nil
-                        go(.settle)
+                        // TODO: the staged reveal (insight line first, then the
+                        // Field, then recent) once the insight engine exists.
+                        go(.home)
                     })
                     .transition(.opacity)
                 }
             }
         }
-        // TEMP: confirm saved Moments survive launches (see TEMP_MomentLog).
-        .onAppear { TEMP_MomentLog.dumpAll(modelContext) }
     }
 
     /// Persists the whole Moment once, at the end of the flow. Invisible and
@@ -52,7 +53,6 @@ struct RootView: View {
         )
         modelContext.insert(moment)
         try? modelContext.save()
-        TEMP_MomentLog.logSaved(moment) // TEMP: remove with TEMP_MomentLog.
     }
 
     private func go(_ next: Stage) {
