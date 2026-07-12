@@ -56,9 +56,9 @@ struct HomeView: View {
                     .font(Theme.Font.serif(20, relativeTo: .title3))
                     .foregroundStyle(Theme.Color.ink.opacity(0.5))
 
-                // TODO: insight line goes here (the standing insight, per the
-                // staged reveal). Left empty until the insight engine exists —
-                // never invent a line.
+                // The standing insight (§5). Shown inline for now; the staged
+                // reveal (insight first, then the Field) comes later.
+                insightLine
 
                 FieldView(moments: moments)
 
@@ -69,6 +69,18 @@ struct HomeView: View {
             .padding(.top, Theme.Spacing.xxl)
             // Room so the entry point never covers the last row.
             .padding(.bottom, Theme.Spacing.xxxl + Theme.Spacing.xl)
+        }
+    }
+
+    /// The standing insight, straight from the deterministic engine. If nothing
+    /// is honestly true, it shows nothing — a quiet Home is correct.
+    @ViewBuilder private var insightLine: some View {
+        if let insight = InsightEngine.standingInsight(for: moments) {
+            Text(insight.text)
+                .font(Theme.Font.serif(20, relativeTo: .title3))
+                .foregroundStyle(Theme.Color.ink.opacity(0.75))
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 
