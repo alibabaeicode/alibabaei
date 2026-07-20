@@ -12,6 +12,8 @@ struct HomeView: View {
 
     /// A quiet, unobtrusive way to begin a new Moment.
     var onBegin: () -> Void = {}
+    /// A quiet way through to the Archive ("Where you've been").
+    var onOpenArchive: () -> Void = {}
 
     @Query(sort: \Moment.timestamp, order: .reverse) private var moments: [Moment]
 
@@ -62,9 +64,19 @@ struct HomeView: View {
     private var filledState: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Theme.Spacing.lg) {
-                Text("You, lately")
-                    .font(Theme.Font.serif(20, relativeTo: .title3))
-                    .foregroundStyle(Theme.Color.ink.opacity(0.5))
+                HStack(alignment: .firstTextBaseline) {
+                    Text("You, lately")
+                        .font(Theme.Font.serif(20, relativeTo: .title3))
+                        .foregroundStyle(Theme.Color.ink.opacity(0.5))
+                    Spacer()
+                    Button(action: onOpenArchive) {
+                        Text("where you've been")
+                            .font(Theme.Font.mono(11, relativeTo: .caption2))
+                            .tracking(1)
+                            .foregroundStyle(Theme.Color.ink.opacity(0.4))
+                    }
+                    .buttonStyle(.plain)
+                }
 
                 // The standing insight (§5). Shown inline for now; the staged
                 // reveal (insight first, then the Field) comes later.

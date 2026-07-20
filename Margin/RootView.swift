@@ -4,7 +4,7 @@ import SwiftData
 /// The app's root surface. Home is the base; a Moment (Settle → Name → Note)
 /// begins from Home, saves on device, and returns to Home.
 struct RootView: View {
-    private enum Stage { case home, settle, name, note }
+    private enum Stage { case home, settle, name, note, archive }
 
     @Environment(\.modelContext) private var modelContext
 
@@ -16,7 +16,13 @@ struct RootView: View {
         ZStack {
             switch stage {
             case .home:
-                HomeView(onBegin: { go(.settle) })
+                HomeView(
+                    onBegin: { go(.settle) },
+                    onOpenArchive: { go(.archive) }
+                )
+                .transition(.opacity)
+            case .archive:
+                ArchiveView(onBack: { go(.home) })
                     .transition(.opacity)
             case .settle:
                 SettleView(onContinue: { go(.name) })
