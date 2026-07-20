@@ -19,18 +19,25 @@ struct HomeView: View {
         ZStack {
             PaperBackground()
 
-            if moments.isEmpty {
-                emptyState
-            } else {
-                filledState
+            // Scroll view and footer are siblings in a vertical stack: the
+            // scroll view fills only the space ABOVE the footer, so list items
+            // physically cannot render under "take a moment" (no overlay).
+            VStack(spacing: 0) {
+                Group {
+                    if moments.isEmpty {
+                        emptyState
+                    } else {
+                        filledState
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                entryPoint
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, Theme.Spacing.xl)
+                    .padding(.top, Theme.Spacing.md)
+                    .padding(.bottom, Theme.Spacing.xl)
             }
-        }
-        // Pins "take a moment" at the bottom and insets the scrollable list by
-        // its height, so the last recent moments always scroll clear of it.
-        .safeAreaInset(edge: .bottom, alignment: .leading) {
-            entryPoint
-                .padding(.leading, Theme.Spacing.xl)
-                .padding(.bottom, Theme.Spacing.xl)
         }
     }
 
@@ -70,8 +77,8 @@ struct HomeView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, Theme.Spacing.xl)
             .padding(.top, Theme.Spacing.xxl)
-            // A calm gap above the pinned entry point; clearance itself is
-            // handled by the bottom safeAreaInset.
+            // A calm gap at the end of the list; the footer lives outside this
+            // scroll view, so it can never overlap the rows.
             .padding(.bottom, Theme.Spacing.lg)
         }
     }
