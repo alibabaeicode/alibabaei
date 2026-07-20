@@ -16,7 +16,7 @@ struct HomeView: View {
     @Query(sort: \Moment.timestamp, order: .reverse) private var moments: [Moment]
 
     var body: some View {
-        ZStack(alignment: .bottomLeading) {
+        ZStack {
             PaperBackground()
 
             if moments.isEmpty {
@@ -24,7 +24,10 @@ struct HomeView: View {
             } else {
                 filledState
             }
-
+        }
+        // Pins "take a moment" at the bottom and insets the scrollable list by
+        // its height, so the last recent moments always scroll clear of it.
+        .safeAreaInset(edge: .bottom, alignment: .leading) {
             entryPoint
                 .padding(.leading, Theme.Spacing.xl)
                 .padding(.bottom, Theme.Spacing.xl)
@@ -67,8 +70,9 @@ struct HomeView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, Theme.Spacing.xl)
             .padding(.top, Theme.Spacing.xxl)
-            // Room so the entry point never covers the last row.
-            .padding(.bottom, Theme.Spacing.xxxl + Theme.Spacing.xl)
+            // A calm gap above the pinned entry point; clearance itself is
+            // handled by the bottom safeAreaInset.
+            .padding(.bottom, Theme.Spacing.lg)
         }
     }
 
